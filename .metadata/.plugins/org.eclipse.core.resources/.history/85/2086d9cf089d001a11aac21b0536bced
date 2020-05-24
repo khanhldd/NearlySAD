@@ -1,0 +1,32 @@
+package com.flywithmet7.entity;
+
+import java.util.List;
+
+public class AllTickets {
+    private Integer id;
+    public List<Object> tickets;
+
+    public AllTickets(Integer id, List<Object> tickets) {
+        this.id = id;
+        this.tickets = tickets;
+    }
+
+    public AllTickets() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public List<Object> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Object> tickets) {
+        this.tickets = tickets;
+    }
+}

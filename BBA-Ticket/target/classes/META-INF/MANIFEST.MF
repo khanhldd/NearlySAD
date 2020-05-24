@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: daigu
+Build-Jdk: 13.0.2
+Implementation-Title: bba-ticket-service
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.flywithmet7
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-boot
+ -starter-parent/BBA-Ticket
+Created-By: Maven Integration for Eclipse
+

@@ -1,0 +1,71 @@
+package com.flywithmet7.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.flywithmet7.entity.BBABooking;
+import com.netflix.ribbon.proxy.annotation.Var;
+
+@RestController
+@RequestMapping("/")
+public class BBAController {
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	@Autowired
+	private Environment env;
+	
+	@RequestMapping("/")
+	public String home() {
+		// This is useful for debugging
+		// When having multiple instance of gallery service running at different ports.
+		// We load balance among them, and display which instance received the request.
+		return "Hello from VNA Booking running at port: " + env.getProperty("local.server.port");
+	}
+  
+	@RequestMapping("/tickets")
+	public BBABooking ticket() {
+		// create gallery object
+		BBABooking bk = new BBABooking();
+		//booking.setId(id);
+		
+		// get list of available images 
+		List<Object> tickets = restTemplate.getForObject("http://bba-ticket-service/tickets/", List.class);
+		bk.setTickets(tickets);
+	
+		return bk;
+	}
+	@RequestMapping("/tickets/{date}/{from}/{to}/{adult}/{children}/{baby}")
+	public BBABooking getBooking(@PathVariable final String date, 
+			                  @PathVariable final String from, 
+			                  @PathVariable final String to, 
+			                  @PathVariable final Integer adult, 
+			                  @PathVariable final Integer children, 
+			                  @PathVariable final Integer baby) {
+								
+		BBABooking booking = new BBABooking();
+		List<Object> rsTickets = restTemplate.getForObject("http://bba-ticket-service/tickets/"
+															+ date + "/"
+															+ from + "/"
+															+ to + "/"
+															+ adult + "/"
+															+ children + "/"
+															+ baby + "/", List.class);
+			booking.setTickets(rsTickets);
+		return booking;
+	}
+	
+	// -------- Admin Area --------
+	// This method should only be accessed by users with role of 'admin'
+	// We'll add the logic of role based auth later
+	@RequestMapping("/admin")
+	public String homeAdmin() {
+		return "This is the admin area of Gallery service running at port: " + env.getProperty("local.server.port");
+	}
+}
